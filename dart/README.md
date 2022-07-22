@@ -1,33 +1,22 @@
-// main() {
-//   print("hello world");
-// }
+# Dart 基礎語法
 
-import './lib/sql.dart';
-
+``` 
 void main() {
-  // var str = 'hello dart';
-  // int age = 12;
-  // var pAge = 13;
-  //
-  // const name = "xxx";
-  // final pName;
-  // pName = "jc";
-  //
-  // final now = new DateTime.now();
-  // print(now);
-  //
-  // print("hello world");
-  
-  
-  testString();
-  testNumber();
-  testList();
-  testMap();
-  print(printUserInfo("username"));
+  var str = 'hello dart';
+  int age = 12;
+  var pAge = 13;
 
-  testPerson();
+  print("hello world");
 }
 
+const name = "xxx";
+final pName;  // 只能賦值一次
+pName = "jc";
+```
+
+### 基礎類型：
+
+``` 
 void testString() {
   String h1 = "Hello";
   String h2 = "World";
@@ -84,7 +73,11 @@ void testMap() {
 
   var p = new Map<String,int>();
 }
+```
 
+### class oject
+
+``` 
 String printUserInfo(String username,[int? age, String sex = 'おとこ']) {
   return "$username + $age + $sex";
 }
@@ -100,7 +93,7 @@ bool isEvenNumber(int n) {
 class Person {
   late String name;
   int age =23;
-
+  
   static HelloWorld() {
     print("hello world");
   }
@@ -127,18 +120,16 @@ class Px extends Person {
   Px(String name, int age) : super(name, age);
 }
 
-
 void testPerson() {
   Person dollar = new Person("name", 11);
   dollar.getInfo();
   dollar._xn();
 
   Person.HelloWorld();
-
+  
   Db mySql = new MySQL();
   mySql.Init("xxxx");
 }
-
 
 // 類似與interface
 abstract class Animal {
@@ -159,3 +150,78 @@ class Cat implements Animal {
     throw UnimplementedError();
   }
 }
+
+abstract class Db {
+  Init(String uri);
+  Query();
+  Exec();
+}
+
+class MySQL implements Db {
+  late String uri;
+
+  @override
+  Init(String uri) {
+    this.uri = uri;
+  }
+
+  @override
+  Exec() {
+    print("exec");
+  }
+
+  @override
+  Query() {
+    print("query");
+  }
+
+}
+
+
+// 實現多個接口
+abstract class A {
+  late String name;
+  void printA();
+}
+
+abstract class B {
+  late String name;
+  void printB();
+}
+
+class Ab implements A,B {
+  @override
+  late String name;
+
+  @override
+  void printA() {
+    // TODO: implement printA
+  }
+
+  @override
+  void printB() {
+    // TODO: implement printB
+  }
+  
+}
+```
+
+mixins 實現類似 多繼承：
+
+``` 
+class A {
+  late String name;
+  void printA() {
+    print("av");
+  }
+}
+
+class B {
+  late String name;
+  void printB() {
+    print("av");
+  }
+}
+
+class Ab with A,B {}
+```
