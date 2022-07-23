@@ -26,6 +26,7 @@ void main() {
   print(printUserInfo("username"));
 
   testPerson();
+  testT();
 }
 
 void testString() {
@@ -158,4 +159,30 @@ class Cat implements Animal {
     // TODO: implement eat
     throw UnimplementedError();
   }
+}
+
+
+T getDate<T>(T value) {
+  return value;
+}
+
+class MyList<T> {
+  List list = <T>[];
+  void add(T value) {
+    this.list.add(value);
+  }
+  List getList(){
+    return this.list;
+  }
+}
+
+void testT() {
+  print(getDate("value"));
+  print(getDate<String>("value"));
+
+  MyList ls = new MyList();
+  MyList ls2 = new MyList<int>();
+  ls.add(1);
+  ls.add(2);
+  print(ls.getList());
 }
