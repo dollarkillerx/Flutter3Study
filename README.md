@@ -138,6 +138,14 @@ Image.network(
   )
 ```
 
+### 佈局方式
+
+- [ListTile 水平佈局 鋪滿一行](#List佈局1)
+- [GridView 網格佈局 鋪滿一行](#List佈局2網格)
+- [Column 垂直佈局X軸 該多大就多大](#Column垂直佈局X軸)
+- [Row 水平佈局Y軸 該多大就多大](#Row水平佈局Y軸)
+- [Expanded => Flex](#Expanded=>Flex)
+- [Stack定位佈局](#Stack定位佈局)
 
 ##### List佈局1
 
@@ -181,7 +189,7 @@ class HomeContent extends StatelessWidget {
 
 ```
 
-##### List佈局2 網格
+##### List佈局2網格
 
 v1: 
 
@@ -212,3 +220,200 @@ class HomeContent extends StatelessWidget {
 }
 
 ```
+
+
+#### Column垂直佈局X軸
+
+該多大就多大
+
+``` 
+Column(  
+  children: <Widget>[
+    Image.network(e["img"],fit: BoxFit.fill,),
+    // SizedBox(
+    //   height: 10,
+    // ),
+    Text(e["title"], style: TextStyle(fontSize: 20),)
+  ],
+),
+```
+
+##### Row水平佈局Y軸 
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // return GridView.count(  // 鋪滿一行
+    //   crossAxisCount: 3,
+    //   children: <Widget>[
+    //     IconContainer(Icons.home),
+    //     IconContainer(Icons.join_left_outlined),
+    //     IconContainer(Icons.equalizer),
+    //   ],
+    // );
+
+    return Container(
+      height: 600,
+      width: 400,
+      color: Colors.black,
+      child: Row(
+        children: <Widget>[
+          IconContainer(Icons.home),
+          IconContainer(Icons.join_left_outlined),
+          IconContainer(Icons.equalizer),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start, // Y軸 默認居中
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 水平方向排列位置  (spaceEvenly 均匀分配)
+      ),
+    );
+  }
+```
+
+##### Expanded=>Flex
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+       Expanded(
+           child:  IconContainer(Icons.search, color: Colors.blue),
+         flex: 1,  // 占用1份
+       ),
+        Expanded(
+          child: IconContainer(Icons.home, color: Colors.yellow),
+          flex: 2, // 占用2份
+        ),
+      ],
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        IconContainer(Icons.search, color: Colors.blue), // 固定寬度
+        Expanded(  // 自適應
+          child: IconContainer(Icons.home, color: Colors.yellow),
+          flex: 2, // 占用2份
+        ),
+      ],
+    );
+  }
+}
+```
+
+小練習
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        Image.network("https://www.itying.com/images/flutter/1.png"),
+        Container(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Image.network("https://www.itying.com/images/flutter/2.png"),
+              ),
+              Expanded(
+                flex: 1,
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        Image.network("https://www.itying.com/images/flutter/3.png"),
+                        Image.network("https://www.itying.com/images/flutter/4.png"),
+                      ],
+                    ),
+                  ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+```
+
+#### Stack定位佈局
+
+- Stack (Positioned[精確],Align)
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(   // Stack 會將多個元素放置在一起
+        // alignment: Alignment.center, // 讓所有的元素居中  (預設)
+        alignment: Alignment(0,0.5), // 左右,上下 自定義
+        children: <Widget>[  // 這個是堆叠的
+          Container(
+            height: 400,
+            width: 300,
+            color: Colors.red,
+          ),
+          Text("わたしはtextです",style: TextStyle(
+            fontSize: 40,
+            color: Colors.white
+          ),),
+          // Text("僕もtextです"),
+        ],
+      ),
+    );
+  }
+}
+
+```
+
+v2:
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 400,
+        width: 300,
+        color: Colors.red,
+        child: Stack(   // Stack 會將多個元素放置在一起
+          children: <Widget>[  // 這個是堆叠的
+            Positioned(
+              top: 10,
+              bottom: 0,
+              left: 100,
+              right: 0,
+              child: Icon(Icons.home,size: 40, color: Colors.white,),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Icon(Icons.search,size: 30, color: Colors.white,),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Icon(Icons.send,size: 60, color: Colors.white,),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+##### AspectRatio
+
+設置相對於父元素的寬高比
+
+##### Card
+
