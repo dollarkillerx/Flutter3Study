@@ -254,3 +254,76 @@ void testT() {
   print(ls.getList());
 }
 ```
+
+##### List 
+
+垂直列表: 
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var list = <Widget>[];
+    for (var i = 0; i < 10; i++) {
+      list.add(ListTile(
+        leading: Image.network(
+            "https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b"),
+        // https://fonts.google.com/icons?selected=Material+Icons
+        // leading: Icon(Icons.home,color: Colors.green,), // 圖標前置
+        trailing: Icon(Icons.join_left_outlined), // 圖標後置
+        title: Text("東北大平原",
+            style: TextStyle(
+              fontSize: 18,
+            )),
+        subtitle:
+            Text("牛高馬大 空氣清新,牛高馬大 空氣清新,牛高馬大 空氣清新,牛高馬大 空氣清新,牛高馬大 空氣清新,牛高馬大 空氣清新"),
+      ));
+      list.add(Image.network(
+          "https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b"));
+    }
+
+    return ListView(
+      padding: EdgeInsets.all(6),
+      children: <Widget>[
+        ...list,
+      ],
+    );
+  }
+}
+```
+
+水平列表: 
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var list = <Widget>[];
+    for (var i = 0; i < 10; i++) {
+      list.add(Container(
+        height: 180,
+        width: 180,
+        color: i%2>0?Colors.amber: Colors.green,
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text("噶沙司"),
+              subtitle: Text("this is body")
+            )
+          ],
+        ),
+        // margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      ));
+    }
+
+    return Container(
+      child: ListView(
+        scrollDirection: Axis.horizontal, // horizontal 水平列表 vertical 垂直列表 默認
+        children: <Widget>[
+          ...list,
+        ],
+      ),
+      height: 180,
+    );
+  }
+}
+```
