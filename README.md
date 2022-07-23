@@ -140,14 +140,16 @@ Image.network(
 
 ### 佈局方式
 
-- [ListTile 水平佈局 鋪滿一行](#List佈局1)
-- [GridView 網格佈局 鋪滿一行](#List佈局2網格)
+- [ListTile 水平佈局 鋪滿一行](#ListView佈局)
+- [GridView 網格佈局 鋪滿一行](#GridView網格)
 - [Column 垂直佈局X軸 該多大就多大](#Column垂直佈局X軸)
 - [Row 水平佈局Y軸 該多大就多大](#Row水平佈局Y軸)
 - [Expanded => Flex](#Expanded=>Flex)
 - [Stack定位佈局](#Stack定位佈局)
 
-##### List佈局1
+##### ListView佈局
+
+(!ListView 不能嵌套!)
 
 ``` 
 class HomeContent extends StatelessWidget {
@@ -189,7 +191,7 @@ class HomeContent extends StatelessWidget {
 
 ```
 
-##### List佈局2網格
+##### GridView網格
 
 v1: 
 
@@ -415,5 +417,206 @@ class HomeContent extends StatelessWidget {
 
 設置相對於父元素的寬高比
 
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      child: AspectRatio(
+        aspectRatio: 2.0/1.0, // 父元素 寬度 高度 比  (圖片平鋪用的比較多)
+        child: Container(
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+}
+```
+
 ##### Card
 
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        Card(
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Text("張三",style: TextStyle(fontSize: 28),),
+                subtitle: Text("高級軟件工程師"),
+              ),
+              ListTile(
+                title: Text("電話： 10086"),
+              ),
+              ListTile(
+                title: Text("地址： xxxxxx"),
+              ),
+            ],
+          ),
+        ),Card(
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Text("張三",style: TextStyle(fontSize: 28),),
+                subtitle: Text("高級軟件工程師"),
+              ),
+              ListTile(
+                title: Text("電話： 10086"),
+              ),
+              ListTile(
+                title: Text("地址： xxxxxx"),
+              ),
+            ],
+          ),
+        ),
+        Card(
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Text("張三",style: TextStyle(fontSize: 28),),
+                subtitle: Text("高級軟件工程師"),
+              ),
+              ListTile(
+                title: Text("電話： 10086"),
+              ),
+              ListTile(
+                title: Text("地址： xxxxxx"),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+```
+
+佈局單元測試: 
+
+``` 
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        CardItem("Candy Shop", "description description",
+            "https://www.itying.com/images/flutter/1.png"),
+        CardItem("Candy Shop", "description description",
+            "https://www.itying.com/images/flutter/1.png"),
+        CardItem("Candy Shop", "description description",
+            "https://www.itying.com/images/flutter/1.png"),
+      ],
+    );
+  }
+}
+
+class CardItem extends StatelessWidget {
+  String name;
+  String description;
+  String img;
+
+  CardItem(this.name, this.description, this.img);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(10),
+      child: Column(
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Image.network(
+              this.img,
+              fit: BoxFit.cover,
+            ),
+          ),
+          ListTile(
+            leading: CircleAvatar( // 專用圖片處理成頭像
+              backgroundImage: NetworkImage(this.img),
+            ),
+            // leading: ClipOval(   // 剪切成圓形
+            //   child: Image.network(this.img,fit: BoxFit.cover, width: 60,height: 60,),
+            // ),
+            title: Text(
+              this.name,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            subtitle: Text(
+              this.description,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black26,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// class CardItem extends StatelessWidget {
+//   String name;
+//   String description;
+//   String img;
+//
+//   CardItem(this.name, this.description, this.img);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       margin: EdgeInsets.all(10),
+//       child: Column(
+//         children: <Widget>[
+//           AspectRatio(
+//             aspectRatio: 16 / 9,
+//             child: Image.network(
+//               this.img,
+//               fit: BoxFit.cover,
+//             ),
+//           ),
+//           Row(
+//             children: <Widget>[
+//               Expanded(
+//                 child: ClipOval(
+//
+//                   child: Image.network(this.img,fit: BoxFit.cover, width: 10,),
+//                 ),
+//                 flex: 1,
+//               ),
+//               Expanded(
+//                 flex: 4,
+//                 child: ListTile(
+//                   title: Text(
+//                     this.name,
+//                     style: TextStyle(
+//                       fontSize: 20,
+//                     ),
+//                   ),
+//                   subtitle: Text(
+//                     this.description,
+//                     style: TextStyle(
+//                       fontSize: 15,
+//                       color: Colors.black26,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+```
