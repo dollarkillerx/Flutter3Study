@@ -146,6 +146,9 @@ Image.network(
 - [Row 水平佈局Y軸 該多大就多大](#Row水平佈局Y軸)
 - [Expanded => Flex](#Expanded=>Flex)
 - [Stack定位佈局](#Stack定位佈局)
+- [AspectRatio 圖片寬高規範](#AspectRatio) 
+- [Card](#Card)
+- [Wrap流佈局](#Wrap流佈局)
 
 ##### ListView佈局
 
@@ -415,6 +418,8 @@ class HomeContent extends StatelessWidget {
 
 ##### AspectRatio
 
+主要用於控制圖片寬高
+
 設置相對於父元素的寬高比
 
 ``` 
@@ -620,3 +625,7 @@ class CardItem extends StatelessWidget {
 // }
 
 ```
+
+
+##### Wrap流佈局
+
