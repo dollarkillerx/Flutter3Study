@@ -839,3 +839,127 @@ Navigator.pop  返回上一級
           MaterialPageRoute(builder: (context)=>FromPage(title: 'hello from',))
   );
 ```
+
+命名路由：
+
+``` 
+
+// 1. 根組件  MaterialApp 配置錄音
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Tabls(),
+      routes: {
+        '/form': (context)=>FromPage(),
+        '/search': (context)=>SearchPage(),
+      },
+    );
+  }
+}
+
+// 2 跳轉： Navigator.pushNamed(context, "/search");
+```
+
+傳值:
+
+https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments
+
+``` 
+class MyApp extends StatelessWidget {
+  final routes = {
+    '/form': (context, {arguments})=>FromPage(),
+    '/search': (context)=>SearchPage(),
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Tabls(),
+      routes: routes,
+      onGenerateRoute: (RouteSettings settings) {
+        final String? name = settings.name;
+        final Function pageContentBuilder = routes[name] as Function;
+        if (pageContentBuilder != null) {
+          if (settings.arguments != null) {
+            final Route route = MaterialPageRoute(
+                builder: (context) =>
+                    pageContentBuilder(context, arguments: settings.arguments));
+            return route;
+          } else {
+            final Route route =
+            MaterialPageRoute(builder: (context) => pageContentBuilder(context));
+            return route;
+          }
+        }
+      },
+    );
+  }
+}
+
+// 跳轉
+ElevatedButton(onPressed: (){
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context)=>FromPage(arguments: {
+        "name": 'hello from'
+      },))
+    );
+}, child: Text("跳轉到表單并傳值")),
+
+// 無狀態接受
+class FromPage extends StatelessWidget {
+  final arguments;//定义常量
+
+  FromPage({this.arguments});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(arguments != null ? arguments['name'] : "From Page"),
+      ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            title: Text("me is from"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+有狀態：
+
+class ProductPage extends StatefulWidget {
+  final Map? arguments;//定义参数映射对象 final 常量
+  //可选参数定义
+  ProductPage({this.arguments,Key? key}) : super(key: key);
+
+  @override
+  _ProductPageState createState() => _ProductPageState(arguments: this.arguments);
+}
+
+class _ProductPageState extends State<ProductPage> {
+  Map? arguments; //组件内定义接收值
+  _ProductPageState({this.arguments});//构造函数接收可选参数
+
+  @override
+  Widget build(BuildContext context) {
+
+    print("xx");
+    print(this.arguments);
+    print("xx2");
+    return Scaffold(
+      appBar: AppBar(title: Text("Product"),),
+      body: Container(
+        child: Center(
+          child: Text("this is Product ${arguments != null ? arguments!['id'] :"没有id"}"),
+          // child: Text("this is Product"),
+        ),
+      ),
+    );
+  }
+}
+```
