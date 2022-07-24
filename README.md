@@ -1917,5 +1917,17 @@ keystore ：
 keyalg RSA -keysize 2048 ：使用 2048 位 RSA 算法对签名加密
 validity 10000 ：有效期时间，这里是 10000天
 alias sign ： 别名 sign
+```
 
+##### 關於 Flutter真机调试之后，安装新版本时提示:更新包与已安装应用签名不一致
+
+https://www.jianshu.com/p/bfd40c6804c8
+
+安装打包好的APP时提示：更新包与已安装应用签名不一致
+
+``` 
+命令行输入 adb --version
+adb uninstall 你的包名
+
+打开项目文件，找到android/app/src/main/kotlin下面的kt文件夹，里面的 第一行，package 后面的com.xxx.xxx，就是包名
 ```
