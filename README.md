@@ -231,6 +231,17 @@ class HomeContent extends StatelessWidget {
 
 該多大就多大
 
+解決溢出 `SingleChildScrollView` 外面包一層就可以滑動了
+
+``` 
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: SingleChildScrollView(
+        child: Column()
+```
+
 ``` 
 Column(  
   children: <Widget>[
@@ -1882,4 +1893,29 @@ void main(){
     SystemChrome.setSystemUIOverlayStyle(style);
   }
 }
+```
+
+
+#### APP 打包 Android
+
+https://developer.aliyun.com/article/859389
+
+
+找到keystore:  
+``` 
+X:\Program Files\Android\Android Studio\jre\bin
+```
+
+run: 
+
+``` 
+keytool -genkey -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+
+genkey : 产生密钥
+keystore ：
+<存放的路径>/key.jks ：证书的存放路径和名字
+keyalg RSA -keysize 2048 ：使用 2048 位 RSA 算法对签名加密
+validity 10000 ：有效期时间，这里是 10000天
+alias sign ： 别名 sign
+
 ```
