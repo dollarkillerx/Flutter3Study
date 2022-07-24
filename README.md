@@ -1583,3 +1583,277 @@ Padding(
                   )
               ),
 ```
+
+##### 不支持空安全
+
+https://blog.csdn.net/iOS_MingXing/article/details/123091081
+
+https://stackoverflow.com/questions/64917744/cannot-run-with-sound-null-safety-because-dependencies-dont-support-null-safety
+
+##### 輪播
+
+`flutter_swiper`
+
+``` 
+class _SwiperPageState extends State<SwiperPage> {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body:  Column(
+        children: <Widget>[
+          Container(
+            child: AspectRatio(
+              child: Swiper(
+                itemBuilder: (BuildContext context,int index){
+                  return new Image.network("https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b",fit: BoxFit.fill,);
+                },
+                itemCount: 3,
+                pagination: new SwiperPagination(),
+                control: new SwiperControl(),
+              ),
+              aspectRatio: 16/9,
+            ),
+            width: double.infinity,
+          )
+        ],
+      ),
+    );
+  }
+}
+```
+
+##### Dialog
+
+``` 
+class _DialogPageState extends State<DialogPage> {
+  _alertDialog() async {
+    var res = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("this is alert dialog"),
+            content: Text("你想好了嗎?"),
+            actions: <Widget>[
+              ElevatedButton(onPressed: () {
+                print("取消");
+                Navigator.pop(context,"Cancle"); // 這個會返回
+              }, child: Text("取消")),
+              ElevatedButton(onPressed: () {
+                print("確定");
+                Navigator.pop(context,"ok");    // 這個會返回
+              }, child: Text("確定"))
+            ],
+          );
+          // return Container(
+          //   height: 100,
+          //   color: Colors.green,
+          // );
+        },
+    );
+
+    print(res);
+  }
+
+  _simpleDialog() async {
+    var res = await showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          alignment: Alignment.bottomCenter,
+          title: Text("this is simple dialog"),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text("Option A"),
+              onPressed: () {
+
+              },
+            ),
+            Divider(),
+            SimpleDialogOption(
+              child: Text("Option B"),
+              onPressed: () {
+
+              },
+            ),
+            Divider(),
+            SimpleDialogOption(
+              child: Text("Option C"),
+              onPressed: () {
+
+              },
+            ),
+
+              ElevatedButton(onPressed: () {
+                print("取消");
+                Navigator.pop(context,"Cancle"); // 這個會返回
+              }, child: Text("取消")),
+              ElevatedButton(onPressed: () {
+                print("確定");
+                Navigator.pop(context,"ok");    // 這個會返回
+              }, child: Text("確定"))
+          ],
+        );
+        // return Container(
+        //   height: 100,
+        //   color: Colors.green,
+        // );
+      },
+    );
+
+    print(res);
+  }
+
+  _modelBottomSheet() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 300,
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text("Option A"),
+                  onTap: () {},
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("Option B"),
+                  onTap: () {},
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("Option C"),
+                  onTap: () {},
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("Option D"),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          );
+        },
+    );
+  }
+
+  _toast() {
+    Fluttertoast.showToast(
+        msg: "This is Center Short Toast",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Dialog"),),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(onPressed: () {
+              _alertDialog();
+            }, child: Text("alert彈出框  AlertDialog")),
+            SizedBox(height: 30,),
+            ElevatedButton(onPressed: () {_simpleDialog();}, child: Text("select彈出框  SimpleDialog")),
+            SizedBox(height: 30,),
+            ElevatedButton(onPressed: () {_modelBottomSheet();}, child: Text("ActionSheet彈出框 showModalBottomSheet")),
+            SizedBox(height: 30,),
+            ElevatedButton(onPressed: () {_toast();}, child: Text("toast-fluttertoast第三方庫")),
+            SizedBox(height: 30,),
+          ],
+        ),
+      ),
+    );
+  }
+  
+```
+
+自定義dialog
+
+``` 
+import 'package:flutter/material.dart';
+import 'dart:async'; // 需要加入
+
+class MyDialog extends Dialog {
+
+  // 定時1.5s 后關閉這個dialog
+  _showTime(context) {
+    var timer;
+    timer = Timer.periodic(Duration(milliseconds: 1500), (timer) {
+      // 回調執行
+      Navigator.pop(context); // 關閉dialog
+      timer.cancel(); // 關閉定時器
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _showTime(context);
+
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Container(
+          height: 300,
+          width: 300,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                      child: Text("關於我們"),
+                      alignment: Alignment.center,
+                    ),
+                    Align(
+                      child: Icon(Icons.close),
+                      alignment: Alignment.centerRight,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(),
+              Container(
+                child: Text("我是内容............................."),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+```
+
+##### json
+
+``` 
+import 'dart:convert'; // json解析需要依賴
+
+void main() {
+  var mapData = {
+    "name": "v1",
+    "age": 20,
+  };
+  var strData = '{"name": "v2", "age": 20}';
+
+  // MAP = > JSON
+  print(json.encode(mapData));
+  // JSON STR = > MAP
+  print(json.decode(strData));
+}
+```
