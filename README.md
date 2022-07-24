@@ -1349,3 +1349,216 @@ TextField:
     );
   }
 ```
+
+##### 時間相關操作
+
+- time_format `第三方包: date_format`
+
+``` 
+    var now = DateTime.now(); // 獲取當前日期
+    print(now);
+    print(now.microsecondsSinceEpoch);
+    print(now.millisecondsSinceEpoch);
+    print(DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch));
+    print(formatDate(DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch), [yyyy, '-', mm, '-', dd]));
+
+```
+
+- 選擇時間  showDatePicker(日期選擇)  showTimePicker(時間選擇)
+
+``` 
+  @override
+  void initState() {
+    super.initState();
+    print(now);
+    print(now.microsecondsSinceEpoch);
+    print(now.millisecondsSinceEpoch);
+    print(DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch));
+    print(formatDate(
+        DateTime.fromMillisecondsSinceEpoch(now.millisecondsSinceEpoch),
+        [yyyy, '-', mm, '-', dd]));
+  }
+
+  // _showDatePicker() {
+  //   showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime(1980),
+  //       lastDate: DateTime(2100),
+  //   ).then((value) => {
+  //     print(value)
+  //   });
+  // }
+
+  String _selectTime = formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
+
+  // 通過異步方式
+  _showDatePicker() async {
+    var result = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1980),
+      lastDate: DateTime(2100),
+    );
+    setState(() {
+      _selectTime = formatDate(result!, [yyyy, '-', mm, '-', dd]);
+    });
+  }
+
+  _showDatePicker2() async {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(), // 當前小時分鐘時間
+    ).then((value) => {
+          // setState(() {
+          //   _selectTime = formatDate(value!, [yyyy, '-', mm, '-', dd]);
+          // })
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("DataPicker"),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(_selectTime),
+                    Icon(Icons.arrow_drop_down)
+                  ],
+                ),
+                onTap: () {
+                  // 打開日期組件
+                  _showDatePicker();
+                },
+              ),
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("10:00"),
+                    Icon(Icons.arrow_drop_down)
+                  ],
+                ),
+                onTap: () {
+                  // 打開日期組件
+                  _showDatePicker2();
+                },
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+三方插件 `flutter_datetime_picker`
+
+``` 
+class _DataPickerPageState2 extends State<DataPickerPage2> {
+  var timeNow = formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("DataPicker"),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(timeNow),
+                    Icon(Icons.arrow_drop_down)
+                  ],
+                ),
+                onTap: () {
+                  // 打開日期組件
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(2018, 3, 5),
+                      maxTime: DateTime(2100, 6, 7), onChanged: (date) {
+                    // 滑動的
+                    print('change $date');
+                  }, onConfirm: (date) {
+                    // 選中的
+                    setState(() {
+                      timeNow = formatDate(date, [yyyy, '-', mm, '-', dd]);
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.zh);
+                },
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+###### flutter 本地化
+
+https://juejin.cn/post/7013486679365255176
+
+1. 修改 pubspec.yaml
+
+``` 
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+```
+
+2. 修改main
+
+``` 
+import 'package:flutter/material.dart';
+import 'package:helloworld/pages/Tabls.dart';
+import 'routes/Routes.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // 國際化
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('zh','CH'),
+        const Locale('en','US'),
+      ],
+    );
+  }
+}
+```
