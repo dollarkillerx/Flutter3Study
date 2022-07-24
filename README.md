@@ -974,3 +974,378 @@ class _ProductPageState extends State<ProductPage> {
   // Navigator.of(context).pushReplacementNamed("/register_second");
   // Navigator.pushNamed(context, "/register_second");
 ```
+
+DrawerHeader 側邊佈局
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.add_a_photo), label: '军机处'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.center_focus_strong), label: '血滴子'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.add_alarm_outlined), label: '大理寺'),
+        ],
+        currentIndex: action,
+        onTap: (e) {
+          setState(() {
+            action = e;
+          });
+        },
+      ),
+      body: this.pageList[this.action],
+      appBar: AppBar(
+        title: Text("Hello Flutter"),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: DrawerHeader(
+                    child: Text("hello flutter"),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage("https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(child: UserAccountsDrawerHeader(
+                  accountName: Text("Dollarkiller"),
+                  accountEmail: Text("dollarkiller@dollarkiller.com"),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage("https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b"),
+                  ),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage("https://picx.zhimg.com/v2-bdb878e47afa95e71f681a362edde08c_1440w.jpg?source=172ae18b"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ))
+              ],
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(Icons.home),
+              ),
+              title: Text("用戶中心"),
+              onTap: () {
+                Navigator.of(context).pop(); // 關閉側邊欄
+                Navigator.pushNamed(context, "/login");
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(Icons.settings),
+              ),
+              title: Text("設置"),
+            ),
+            Divider(),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(Icons.home),
+              ),
+              title: Text("用戶中心"),
+            ),
+            Divider(),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(Icons.settings),
+              ),
+              title: Text("設置"),
+            ),
+          ],
+        ),
+      ),
+      // 左側邊欄
+      endDrawer: Drawer(
+        child: Text("右側邊欄"),
+      ), // 右側邊欄
+    );
+  }
+```
+
+##### 基礎表單：
+
+TextField: 
+
+``` 
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("表單"),),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              obscureText: true, // 密碼框
+              decoration: InputDecoration(
+                icon: Icon(Icons.verified_user),
+                hintText: "請輸入", // pleasehilen
+                border: OutlineInputBorder(),// 邊框
+                labelText: "用戶名",
+              ),
+            ),
+            TextField(
+              maxLines: 4, // 多行文本框
+              decoration: InputDecoration(
+                hintText: "請輸入2", // pleasehilen
+                labelText: "描述",
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+```
+
+數據綁定: 
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("表單"),),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              // obscureText: true, // 密碼框
+              controller: username, // 數據綁定
+              decoration: InputDecoration(
+                icon: Icon(Icons.person),
+                hintText: "請輸入用戶名", // pleasehilen
+                // border: OutlineInputBorder(),// 邊框
+                labelText: "用戶名",
+              ),
+              onChanged: (e) {
+
+              },
+            ),
+            SizedBox(height: 20,),
+            TextField(
+              obscureText: true, // 密碼框
+              controller: password, // 數據綁定
+              decoration: InputDecoration(
+                icon: Icon(Icons.pages_sharp),
+                hintText: "請輸入用戶名", // pleasehilen
+                // border: OutlineInputBorder(),// 邊框
+                labelText: "Password",
+              ),
+              onChanged: (e) {
+
+              },
+            ),
+            SizedBox(height: 20,),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text("Login"),
+                onPressed: () {
+                  print(this.username.text);
+                },
+                style: ElevatedButton.styleFrom(
+                  textStyle: TextStyle(
+                    color: Colors.green
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+```
+
+##### checkbox
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Checkbox"),
+      ),
+      body: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+            activeColor: Colors.red, // 選中顔色
+            value: this.flage,
+            onChanged: (v) {
+              setState(() {
+                this.flage = !this.flage;
+              });
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          CheckboxListTile(
+            value: this.flage,
+            onChanged: (e) {
+              setState(() {
+                this.flage = !this.flage;
+              });
+            },
+            title: Text("this is title"),
+            subtitle: Text("this is subtitle"),
+          ),
+          Divider(),
+          CheckboxListTile(
+            value: this.flage,
+            onChanged: (e) {
+              setState(() {
+                this.flage = !this.flage;
+              });
+            },
+            title: Text("this is title"),
+            subtitle: Text("this is subtitle"),
+            secondary: Icon(Icons.hail),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextField(
+            obscureText: true, // 密碼框
+            decoration: InputDecoration(
+              icon: Icon(Icons.pages_sharp),
+              hintText: "請輸入用戶名", // pleasehilen
+              // border: OutlineInputBorder(),// 邊框
+              labelText: "Password",
+            ),
+            onChanged: (e) {},
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: double.infinity,
+            child: ElevatedButton(
+              child: Text("Login"),
+              onPressed: () {
+                print(this.flage);
+              },
+              style: ElevatedButton.styleFrom(
+                textStyle: TextStyle(color: Colors.green),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+##### radio
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Radio"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text("Man"),
+              leading: Radio<SingingCharacter>(
+                value: SingingCharacter.lafayette,
+                groupValue: this.sex,
+                onChanged: (SingingCharacter? e) {
+                  setState(() {
+                    this.sex = e;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: Text("Waman"),
+              leading: Radio<SingingCharacter>(
+                value: SingingCharacter.jefferson,
+                groupValue: this.sex,
+                onChanged: (SingingCharacter? e) {
+                  setState(() {
+                    this.sex = e;
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            RadioListTile<SingingCharacter>(
+              title: const Text("Man"),
+                value: SingingCharacter.lafayette,
+                groupValue: this.sex,
+                onChanged: (SingingCharacter? e) {
+                  setState(() {
+                    this.sex = e;
+                  });
+                },
+            ),
+            RadioListTile<SingingCharacter>(
+              title: const Text("Wuman"),
+              value: SingingCharacter.jefferson,
+              groupValue: this.sex,
+              onChanged: (SingingCharacter? e) {
+                setState(() {
+                  this.sex = e;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+```
+
+###### switch
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Switch"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            Switch(value: this.flag, onChanged: (e) {
+              setState(() {
+                this.flag = e;
+              });
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+```
