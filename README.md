@@ -1562,3 +1562,24 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+
+#### 解決鍵盤遮擋輸入框
+
+https://github.com/flutter/flutter/issues/18564
+https://juejin.cn/post/7000722125526925342
+
+``` 
+Scaffold(
+      resizeToAvoidBottomInset: false,)
+
+Padding(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: TextField(
+                    maxLines: 10,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Despstion",
+                    ),
+                  )
+              ),
+```
