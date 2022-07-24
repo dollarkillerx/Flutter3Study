@@ -963,3 +963,14 @@ class _ProductPageState extends State<ProductPage> {
   }
 }
 ```
+
+頁面跳轉操作
+
+``` 
+  // 返回根 并清空前面所以的路由
+  Navigator.of(context).pushAndRemoveUntil(
+      new MaterialPageRoute(builder: (context) => new Tabls()), (route) => route == null);
+  // 加載新頁面並替換當前頁面
+  // Navigator.of(context).pushReplacementNamed("/register_second");
+  // Navigator.pushNamed(context, "/register_second");
+```
