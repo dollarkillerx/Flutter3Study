@@ -1919,6 +1919,12 @@ validity 10000 ：有效期时间，这里是 10000天
 alias sign ： 别名 sign
 ```
 
+打包:
+
+``` 
+flutter build apk
+```
+
 ##### 關於 Flutter真机调试之后，安装新版本时提示:更新包与已安装应用签名不一致
 
 https://www.jianshu.com/p/bfd40c6804c8
