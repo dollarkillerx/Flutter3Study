@@ -1931,3 +1931,94 @@ adb uninstall 你的包名
 
 打开项目文件，找到android/app/src/main/kotlin下面的kt文件夹，里面的 第一行，package 后面的com.xxx.xxx，就是包名
 ```
+
+
+##### 使用相機
+
+拍照或獲取從相冊獲取圖片
+
+image_picker
+
+``` 
+class _CameraAppState extends State<CameraApp> {
+  File? image;
+  // 相機
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if(image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+      print(image.name);
+      print(image.path);
+    } on PlatformException catch(e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  // 圖庫
+  Future pickImage2() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if(image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+      print(image.name);
+      print(image.path);
+    } on PlatformException catch(e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  getImg() {
+    if (this.image == null) {
+      return Container();
+    }
+    return Container(
+      child: Image.file(image!),
+      height: 400,
+      width: 400,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Image Picker Example"),
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              MaterialButton(
+                  color: Colors.blue,
+                  child: const Text(
+                      "Pick Image from Gallery",
+                      style: TextStyle(
+                          color: Colors.white70, fontWeight: FontWeight.bold
+                      )
+                  ),
+                  onPressed: () {
+                    pickImage2();
+                  }
+              ),
+              MaterialButton(
+                  color: Colors.blue,
+                  child: const Text(
+                      "Pick Image from Camera",
+                      style: TextStyle(
+                          color: Colors.white70, fontWeight: FontWeight.bold
+                      )
+                  ),
+                  onPressed: () {
+                    pickImage();
+                  }
+              ),
+              getImg(),
+            ],
+          ),
+        )
+    );
+  }
+}
+```
