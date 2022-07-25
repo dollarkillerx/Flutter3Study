@@ -2108,3 +2108,35 @@ class _LoginViewState extends State<LoginView> {
   }
 }
 ```
+
+#### 二維碼識別
+
+flutter_barcode_scanner
+
+``` 
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', '返回', true, ScanMode.BARCODE);
+    } on PlatformException {
+      barcodeScanRes = '获取平台版本失败.';
+    }
+    controller.setScanBarcode(barcodeScanRes) ;
+  }
+  
+  Jiugongge(
+              icon: Icons.qr_code,
+              title: "在綫掃描商品",
+              onTap: () {
+                scanBarcodeNormal(); // 調用
+              },
+            ),
+```
