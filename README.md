@@ -2141,6 +2141,24 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
             ),
 ```
 
+barcode_scan2: ^4.2.1
+
+``` 
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    try {
+      var result = await BarcodeScanner.scan();
+      print(result.type); // The result type (barcode, cancelled, failed)
+      print(result.rawContent); // The barcode content
+      print(result.format); // The barcode format (as enum)
+      print(result.formatNote); // If a unknown format was scanned this field contains a note
+      controller.setScanBarcode(result.rawContent);
+    }on PlatformException {
+      print("errpr");
+    }
+  }
+```
+
 #### How to run Async ’await’ Code in initState() in Flutter App
 
 https://www.fluttercampus.com/guide/63/how-to-run-async-await-code-in-initstate-flutter-app/
