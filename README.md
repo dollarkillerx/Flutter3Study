@@ -2140,3 +2140,18 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
               },
             ),
 ```
+
+#### How to run Async ’await’ Code in initState() in Flutter App
+
+https://www.fluttercampus.com/guide/63/how-to-run-async-await-code-in-initstate-flutter-app/
+
+``` 
+@override
+void initState() {
+  //you are not allowed to add async modifier to initState
+  Future.delayed(Duration.zero,() async {
+        //your async 'await' codes goes here
+  });
+  super.initState();
+}
+```
