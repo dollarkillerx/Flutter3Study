@@ -2218,3 +2218,7 @@ class Singleton {
   static late final Singleton _instance = Singleton._internal();
 }
 ```
+
+GETX:
+
+https://www.liujunmin.com/flutter/getx/getx_controller.html
