@@ -2173,3 +2173,48 @@ void initState() {
   super.initState();
 }
 ```
+
+##### flutter单例模式
+
+https://flutter.cn/community/tutorials/singleton-pattern-in-flutter-n-dart
+
+``` 
+
+
+class Singleton {
+  static Singleton _instance;
+  
+  Singleton._internal();
+  
+  // 工厂构造函数
+  factory Singleton() {
+    if (_instance == null) {
+      _instance = Singleton._internal();
+    }
+    
+    return _instance;
+  }
+}
+
+Dart 空安全及箭头函数等特性，那么还可以使用另一种方式进一步精简代码，写出像下面这样 Dart 风味十足的代码：
+
+class Singleton {
+  static Singleton _instance;
+
+  Singleton._internal() {
+    _instance = this;
+  }
+
+  factory Singleton() => _instance ?? Singleton._internal();
+}
+
+懒加载: 
+
+class Singleton {
+  Singleton._internal();
+  
+  factory Singleton() => _instance;
+  
+  static late final Singleton _instance = Singleton._internal();
+}
+```
