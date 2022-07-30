@@ -1909,7 +1909,7 @@ X:\Program Files\Android\Android Studio\jre\bin
 run: 
 
 ``` 
-keytool -genkey -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+keytool -genkey -v -keystore X:\key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
 
 genkey : 产生密钥
 keystore ：
