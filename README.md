@@ -2222,3 +2222,187 @@ class Singleton {
 GETX:
 
 https://www.liujunmin.com/flutter/getx/getx_controller.html
+
+
+#### Navigator2
+
+#### 預初始化
+
+``` 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<HiCache>(
+        future: () async {
+          return await HiCache.preInit();
+        }(),
+        builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
+      var widget = snapshot.connectionState == ConnectionState.done ?
+          Router(routerDelegate: _routerDelegate):
+          Scaffold(
+            body: Center(child: CircularProgressIndicator(),),
+          );
+      return MaterialApp(
+        home: widget,
+        theme: ThemeData(primarySwatch: white),
+      );
+    });
+  }
+```
+
+#### 基於PageView 來實現 帶有bottomNavigationBar的首頁
+
+PageView 在來回切換的時候 會被重新創建 
+
+``` 
+    return Scaffold(
+      body: PageView(
+        controller: _controller,
+        children: [
+          HomePage(),
+          RankingPage(),
+          FavoritePage(),
+          ProfilePage(),
+        ],
+        onPageChanged: (index)=>_onJumpTo(index,pageChange: true),
+        physics: NeverScrollableScrollPhysics(), // 禁止滾動
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index)=>_onJumpTo(index),
+        selectedItemColor: _activeColor,
+        items: [
+          _bottomItem('Home', Icons.home, 0),
+          _bottomItem('Ranking', Icons.align_vertical_top, 1),
+          _bottomItem('Favorite', Icons.favorite, 2),
+          _bottomItem('Profile', Icons.park_rounded, 3),
+        ],
+      ),
+    );
+  }
+```
+
+
+PageView 在來回切換的時候 會被重新創建
+
+下面的HomePage 會重新創建再調用 initState 方法
+``` 
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+   late RouteChangeListener listener;
+
+  @override
+  void initState() {
+    print("init");
+    super.initState();
+```
+
+如果PageView中的頁面要實現 持久的效果: 
+
+需要 `with AutomaticKeepAliveClientMixin ` 并且 重寫 `wantKeepAlive` 方法
+
+``` 
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+```
+
+
+#### Tab
+
+``` 
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+  late RouteChangeListener listener;
+  var tabs = ["推薦", "熱門", "追番", "影視", "搞笑", "日常", "綜合", "手機游戲"];
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // tabController 需要 with TickerProviderStateMixin
+    _tabController = TabController(
+      length: tabs.length, vsync: this,
+    );
+
+    HiNavigator.getInstance().addListener(listener = (current, pre) {
+      print('current: ${current.page}');
+      print('pre: ${pre?.page}');
+
+      if (current.page == widget || current is HomePage) {
+        print("打開首頁了: onResume");
+      } else if (widget == pre?.page || pre?.page is HomePage) {
+        print("打開首頁了: onPause");
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    HiNavigator.getInstance().removeListener(listener);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(top: 30),
+              child: _tabBar(),
+          ),
+          Flexible(child: TabBarView(
+            controller: _tabController,
+            children: tabs.map((e) {
+              return HomeTabPage(name: e);
+            }).toList(),
+          ))
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  _tabBar() {
+    return TabBar(
+      controller: _tabController,
+      isScrollable: true,
+      // 是否可以滾動
+      labelColor: Colors.black,
+      indicator: UnderlineIndicator(
+        strokeCap: StrokeCap.round,
+        borderSide: BorderSide(color: primary, width: 3),
+        insets: EdgeInsets.only(left: 15, right: 15),
+      ),
+      // 圓角指示器
+      tabs: tabs.map<Tab>((tab) {
+        return Tab(child: Padding(
+          padding: EdgeInsets.only(left: 5, right: 5),
+          child: Text(tab, style: TextStyle(
+            fontSize: 16,
+          ),),
+        ));
+      }).toList(),
+    );
+  }
+}
+```
