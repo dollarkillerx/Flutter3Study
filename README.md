@@ -2406,3 +2406,94 @@ class _HomePageState extends State<HomePage>
   }
 }
 ```
+
+
+### 本地生物識別
+
+``` 
+依賴:   local_auth: ^2.1.2
+
+修改1: app/src/main/AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.auth_test">
+
+// 天下下面兩個
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+
+
+修改2: app/src/main/kotlin/com/example/xxxxProjectNamexxxx/MainActivity.kt
+package com.example.auth_test
+
+import io.flutter.embedding.android.FlutterFragmentActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugins.GeneratedPluginRegistrant
+
+class MainActivity: FlutterFragmentActivity() {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+    }
+}
+
+使用:
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+
+  @override
+  void initState() {
+    super.initState();
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+          ? _SupportState.supported
+          : _SupportState.unsupported),
+    );
+  }
+
+
+檢查是否有生物識別功能:
+
+    late bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+    
+調用生物識別:  
+bool authenticated = false;  
+try {
+
+  // 調用生物識別
+  authenticated = await auth.authenticate(
+    localizedReason:
+    '扫描您的指纹（或面部或其他）以进行身份验证',  // 識別描述
+    options: const AuthenticationOptions(
+      stickyAuth: true,
+      biometricOnly: true,
+    ),
+  );
+
+  setState(() {
+    _isAuthenticating = false;
+    _authorized = 'Authenticating2';
+  });
+} on PlatformException catch (e) {
+  print(e);
+  setState(() {
+    _isAuthenticating = false;
+    _authorized = 'Error - ${e.message}';
+  });
+  return;
+}
+if (!mounted) {
+  return;
+}
+```
