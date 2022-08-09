@@ -2497,3 +2497,15 @@ if (!mounted) {
   return;
 }
 ```
+
+
+#### Gradle 配置代理
+
+配置位置 `X:\Users\計算機用戶\.gradle`
+
+文件名: `gradle.properties`
+
+```  
+System.setProperty(“socksProxyHost”,“127.0.0.1”)
+System.setProperty(“socksProxyPort”,“1081”)
+```
