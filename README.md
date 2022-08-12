@@ -2509,3 +2509,21 @@ if (!mounted) {
 System.setProperty(“socksProxyHost”,“127.0.0.1”)
 System.setProperty(“socksProxyPort”,“1081”)
 ```
+
+#### 下拉刷新：
+
+``` 
+    return RefreshIndicator(
+          child: MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: _showB(),
+          ),
+          color: primary,  // 指示器顔色
+          onRefresh: _loadData);
+```
+
+##### lottie
+
+https://lottiefiles.com/
+
